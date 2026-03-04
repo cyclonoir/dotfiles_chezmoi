@@ -33,3 +33,17 @@ alias czad = chezmoi add
 alias czu = chezmoi update
 alias czcd = chezmoi cd
 alias czs = chezmoi status
+
+# Keybindings
+$env.config.keybindings = [
+    {
+        name: fzf_file
+        modifier: control
+        keycode: char_t
+        mode: [emacs, vi_insert]
+        event: {
+            send: executehostcommand
+            cmd: "fzf --height 40% | commandline edit --insert $in"
+        }
+    }
+]
