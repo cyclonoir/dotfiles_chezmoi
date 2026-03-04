@@ -1,0 +1,37 @@
+[user]
+{{- if eq .chezmoi.os "linux" }}
+    email = amiller.swe@pm.me
+    name = cyclonoir
+{{- else }}
+    email = adam.miller@newmill.com
+    name = Adam Miller
+{{- end }}
+[fetch]
+    prune = true
+[push]
+    default = upstream
+[pull]
+    rebase = true
+[core]
+{{- if ne .chezmoi.os "linux" }}
+    trustctime = false
+    ignorecase = true
+    filemode = false
+{{- end }}
+    editor = nvim
+    pager = delta
+[delta]
+    side-by-side = true
+    line-numbers = true
+    navigate = true
+[alias]
+    last = log -1 --stat
+    lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --all
+[merge]
+        ff = only
+        tool = nvim
+[mergetool]
+        prompt = false
+        keepBackup = false
+[mergetool "nvim"]
+        cmd = nvim -d $LOCAL $BASE $REMOTE $MERGED -c \"wincmd b\" -c \"wincmd J\"
