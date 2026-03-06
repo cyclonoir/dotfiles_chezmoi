@@ -24,6 +24,41 @@ source $"($nu.cache-dir)/carapace.nu"
 
 $env.config.history.file_format = "sqlite"
 
+# File system
+alias ls = eza -lh --group-directories-first --icons=auto
+alias lsa = eza -lha --group-directories-first --icons=auto
+alias lt = eza --tree --level=2 --long --icons --git
+alias lta = eza --tree --level=2 --long --icons --git -a
+alias ff = fzf --preview 'bat --style=numbers --color=always {}'
+
+def eff [] {
+    let file = (fzf --preview 'bat --style=numbers --color=always {}')
+    if ($file | is-not-empty) { nvim $file }
+}
+
+def n [...args] {
+    if ($args | is-empty) { nvim . } else { nvim ...$args }
+}
+
+def o [...args] {
+    ^xdg-open ...$args err>| ignore
+}
+
+def cx [] {
+    print -n "\e[2J\e[3J\e[H"
+    claude --allow-dangerously-skip-permissions
+}
+
+# Compression
+def compress [path: string] { tar -czf $"($path | str trim --right --char '/').tar.gz" ($path | str trim --right --char '/') }
+alias decompress = tar -xzf
+
+# Git
+alias g = git
+alias gcm = git commit -m
+alias gcam = git commit -a -m
+alias gcad = git commit -a --amend
+
 # Chezmoi aliases
 alias cz = chezmoi
 alias cze = chezmoi edit
