@@ -1,31 +1,13 @@
-# env.nu
+# Nushell loads configuration in this order:
 #
-# Installed by:
-# version = "0.109.1"
+#   1. env.nu                                   this file
+#   2. config.nu                                core $env.config settings
+#   3. $nu.data-dir/vendor/autoload/*.nu        generated tool integrations
+#   4. $nu.default-config-dir/autoload/*.nu     everything else, alphabetically
 #
-# Previously, environment variables were typically configured in `env.nu`.
-# In general, most configuration can and should be performed in `config.nu`
-# or one of the autoload directories.
+# Steps 3 and 4 run *after* config.nu, so config.nu cannot use anything they
+# define. Only things that must exist before config.nu belong in this file,
+# and currently nothing does — hence no code below.
 #
-# This file is generated for backwards compatibility for now.
-# It is loaded before config.nu and login.nu
-#
-# See https://www.nushell.sh/book/configuration.html
-#
-# Also see `help config env` for more options.
-#
-# You can remove these comments if you want or leave
-# them for future reference.
-
-$env.OMARCHY_PATH = ($env.HOME | path join ".local/share/omarchy")
-$env.PATH = ($env.PATH | prepend ($env.OMARCHY_PATH | path join "bin") | append ($env.HOME | path join ".local/bin"))
-$env.EDITOR = "nvim"
-$env.SUDO_EDITOR = "nvim"
-$env.BAT_THEME = "ansi"
-
-let mise_path = $nu.default-config-dir | path join mise.nu
-^mise activate nu | save $mise_path --force
-
-$env.CARAPACE_BRIDGES = 'zsh,fish,bash,inshellisense'
-mkdir ($nu.cache-dir)
-carapace _carapace nushell | save --force $"($nu.cache-dir)/carapace.nu"
+# Within autoload/, files numbered 00-30 are kept identical on every machine;
+# 40-<platform>.nu is where per-machine settings and commands go.

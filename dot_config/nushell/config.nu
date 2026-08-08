@@ -1,81 +1,23 @@
-# config.nu
-#
-# Installed by:
-# version = "0.109.1"
-#
-# This file is used to override default Nushell settings, define
-# (or import) custom commands, or run any other startup tasks.
-# See https://www.nushell.sh/book/configuration.html
-#
-# Nushell sets "sensible defaults" for most configuration settings, 
-# so your `config.nu` only needs to override these defaults if desired.
-#
-# You can open this file in your default editor using:
-#     config nu
-#
-# You can also pretty-print and page through the documentation for configuration
-# options using:
-#     config nu --doc | nu-highlight | less -R
-#
+# Core nushell settings. Aliases, commands, environment variables and tool
+# integrations live in autoload/; see env.nu for the load order.
 
-source ~/.zoxide.nu
-use ($nu.default-config-dir | path join mise.nu)
-source $"($nu.cache-dir)/carapace.nu"
-
+# The sqlite backend records timestamps, exit codes and session ids that the
+# plaintext one cannot. Fields are assigned individually rather than replacing
+# $env.config.history wholesale, so keys left unset keep following nushell's
+# defaults as those change.
 $env.config.history.file_format = "sqlite"
+$env.config.history.max_size = 5_000_000
+$env.config.history.sync_on_enter = true
+$env.config.history.isolation = false
 
-# File system
-alias ls = eza -lh --group-directories-first --icons=auto
-alias lsa = eza -lha --group-directories-first --icons=auto
-alias lt = eza --tree --level=2 --long --icons --git
-alias lta = eza --tree --level=2 --long --icons --git -a
-alias ff = fzf --preview 'bat --style=numbers --color=always {}'
-
-def eff [] {
-    let file = (fzf --preview 'bat --style=numbers --color=always {}')
-    if ($file | is-not-empty) { nvim $file }
-}
-
-def n [...args] {
-    if ($args | is-empty) { nvim . } else { nvim ...$args }
-}
-
-def o [...args] {
-    ^xdg-open ...$args err>| ignore
-}
-
-def cx [] {
-    print -n "\e[2J\e[3J\e[H"
-    claude --allow-dangerously-skip-permissions
-}
-
-# Compression
-def compress [path: string] { tar -czf $"($path | str trim --right --char '/').tar.gz" ($path | str trim --right --char '/') }
-alias decompress = tar -xzf
-
-# Git
-alias g = git
-alias gcm = git commit -m
-alias gcam = git commit -a -m
-alias gcad = git commit -a --amend
-
-# Chezmoi aliases
-alias cz = chezmoi
-alias cze = chezmoi edit
-alias czd = chezmoi diff
-alias cza = chezmoi apply
-alias czad = chezmoi add
-alias czu = chezmoi update
-alias czcd = chezmoi cd
-alias czs = chezmoi status
-
-# Keybindings
-$env.config.keybindings = [
+# `++=` appends. A plain `=` here would silently discard every keybinding
+# nushell ships with.
+$env.config.keybindings ++= [
     {
-        name: fzf_file
+        name: fzf_fuzzy_search
         modifier: control
         keycode: char_t
-        mode: [emacs, vi_insert]
+        mode: [emacs vi_normal vi_insert]
         event: {
             send: executehostcommand
             cmd: "fzf --height 40% | commandline edit --insert $in"
