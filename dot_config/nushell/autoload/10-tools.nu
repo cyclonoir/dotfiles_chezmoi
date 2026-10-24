@@ -1,7 +1,9 @@
-# Third-party shell integrations: starship, zoxide, carapace, mise, atuin.
+# Third-party shell integrations: starship, zoxide, carapace, mise, atuin, vivid.
 #
-# Each of these ships a command that prints a nushell script to wire it up
-# (`starship init nu`, `zoxide init nushell`, and so on). Running them at every
+# Most of these ship a command that prints a nushell script to wire it up
+# (`starship init nu`, `zoxide init nushell`, and so on). vivid is the odd one:
+# it prints an LS_COLORS value rather than a script, so its spec wraps that
+# value in the assignment itself. Running them at every
 # shell startup spawns a subprocess per tool and costs tens of milliseconds
 # each time. Instead the output is written once into $nu.data-dir/vendor/
 # autoload/, which nushell sources automatically on startup, so the recurring
@@ -25,7 +27,16 @@ def tool-init-specs [] {
         zoxide: {|| zoxide init --cmd cd nushell }
         carapace: {|| carapace _carapace nushell }
         mise: {|| ^mise activate nu }
-        atuin: {|| atuin init nu }
+        # atuin 18.19 emits both of its keybindings with `name: atuin`, and
+        # nushell 0.115 warns about that (nu::shell::shared_keybindings_name)
+        # on every startup. Both bindings keep working, so rename the up-arrow
+        # one to make the names unique. No-op once atuin fixes this upstream.
+        atuin: {|| atuin init nu | str replace --regex '(?m)^(\s*)name: atuin(\s*\n\s*modifier: none)' '${1}name: atuin_up${2}' }
+        # The "ansi" theme paints with the terminal's own 16 ANSI colors
+        # instead of hardcoded hex, so LS_COLORS follows whatever Omarchy
+        # theme is active and never needs regenerating on a theme switch.
+        # Same reasoning as $env.BAT_THEME in 00-env.nu.
+        vivid: {|| $"$env.LS_COLORS = '(vivid generate ansi | str trim)'" }
     }
 }
 
