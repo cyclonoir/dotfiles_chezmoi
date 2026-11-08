@@ -40,6 +40,22 @@ def tool-init-specs [] {
     }
 }
 
+# Some tools emit init scripts that nushell complains about. Patch the output
+# on the way past rather than editing the generated file, which the next
+# refresh-tool-init would overwrite anyway.
+#
+# atuin 18.19.0 gives both its ctrl-r and its up-arrow keybinding the name
+# "atuin", and nushell warns about duplicate keybinding names at every startup.
+# Both bindings work; only the warning is a problem. Remove this once upstream
+# gives them distinct names.
+def fixup-tool-init [name: string, script: string] {
+    if $name == "atuin" {
+        $script | str replace --all --regex 'name: atuin(\n\s*modifier: none)' 'name: atuin_up${1}'
+    } else {
+        $script
+    }
+}
+
 def vendor-autoload-dir [] {
     $nu.data-dir | path join "vendor" "autoload"
 }
@@ -68,7 +84,8 @@ def refresh-tool-init [] {
             }
             continue
         }
-        do ($specs | get $name) | save --force $target
+        let script = (do ($specs | get $name) | into string)
+        fixup-tool-init $name $script | save --force $target
         print $"  wrote ($name).nu"
     }
 
