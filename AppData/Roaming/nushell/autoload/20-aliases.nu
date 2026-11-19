@@ -24,3 +24,6 @@ alias czs = chezmoi status
 
 # Archives
 alias decompress = tar -xzf
+
+# .NET
+alias build = dotnet build -maxcpucount:6 -p:EnableSourceControlManagerQueries=false

@@ -10,6 +10,9 @@ vim.opt.relativenumber = true
 vim.opt.sidescrolloff = 30
 vim.opt.colorcolumn = "80"
 
+-- own trouble breadcrumb component is built in plugins/lualine.lua
+vim.g.trouble_lualine = false
+
 vim.opt.tabstop = 4
 vim.opt.shiftwidth = 0
 vim.opt.softtabstop = -1

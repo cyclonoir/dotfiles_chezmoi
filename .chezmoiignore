@@ -1,0 +1,8 @@
+# Target paths each kind of machine leaves out.
+
+{{ if ne .chezmoi.os "windows" }}
+AppData
+.config/wezterm
+# On Linux, dev-setup's noctalia-theme.lua picks the colorscheme to match the desktop palette.
+.config/nvim/lua/plugins/theme.lua
+{{ end }}

@@ -1,36 +1,50 @@
 [user]
-{{- if eq .chezmoi.os "linux" }}
-    email = amiller.swe@pm.me
-    name = cyclonoir
+{{- if .work }}
+	email = adam.miller@newmill.com
+	name = Adam Miller
 {{- else }}
-    email = adam.miller@newmill.com
-    name = Adam Miller
+	email = amiller.swe@pm.me
+	name = cyclonoir
 {{- end }}
 [fetch]
-    prune = true
+	prune = true
 [push]
-    default = upstream
+	default = upstream
 [pull]
-    rebase = true
+	rebase = true
+[branch "master"]
+	mergeOptions = --ff-only
 [core]
-{{- if ne .chezmoi.os "linux" }}
-    trustctime = false
-    ignorecase = true
-    filemode = false
+{{- if eq .chezmoi.os "windows" }}
+	trustctime = false
+	ignorecase = true
+	filemode = false
 {{- end }}
-    editor = nvim
-    pager = delta
+	editor = nvim
+	pager = delta
+{{- if eq .chezmoi.os "windows" }}
+	autocrlf = input
+{{- end }}
 [delta]
-    line-numbers = true
-    navigate = true
+	navigate = true
+	line-numbers = true
+{{- /* Elsewhere delta follows BAT_THEME (ansi: the terminal's palette) and detects light or dark. */}}
+{{- if eq .chezmoi.os "windows" }}
+	dark = true
+	syntax-theme = gruvbox-dark
+{{- end }}
 [alias]
-    last = log -1 --stat
-    lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --all
+	last = log -1 --stat
+	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --all
 [merge]
-        ff = only
-        tool = nvim
+	tool = diffview
 [mergetool]
-        prompt = false
-        keepBackup = false
-[mergetool "nvim"]
-        cmd = nvim -d $LOCAL $BASE $REMOTE $MERGED -c \"wincmd b\" -c \"wincmd J\"
+	prompt = false
+	keepBackup = false
+[filter "lfs"]
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+[mergetool "diffview"]
+	cmd = nvim --cmd \"let g:git_mergetool = 1\" -c \"DiffviewOpen -- \\\"$MERGED\\\"\"

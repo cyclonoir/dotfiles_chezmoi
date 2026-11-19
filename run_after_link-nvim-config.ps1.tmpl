@@ -1,0 +1,20 @@
+{{ if eq .chezmoi.os "windows" -}}
+# Neovim on Windows reads %LOCALAPPDATA%\nvim, but the config lives in ~\.config\nvim, shared with
+# Linux. A directory junction points one at the other: unlike a symlink, it needs neither admin rights
+# nor Developer Mode. (On other systems this template renders empty, so chezmoi doesn't run it.)
+$ErrorActionPreference = 'Stop'
+$link = Join-Path $env:LOCALAPPDATA 'nvim'
+$target = Join-Path $HOME '.config\nvim'
+
+$item = Get-Item -LiteralPath $link -Force -ErrorAction SilentlyContinue
+if ($item -and $item.LinkType -eq 'Junction' -and $item.Target -contains $target) { exit 0 }
+
+# A config from before the shared one: keep it, out of the way.
+if ($item) {
+    $backup = "nvim.before-chezmoi-$(Get-Date -Format yyyyMMdd-HHmmss)"
+    Rename-Item -LiteralPath $link -NewName $backup
+    Write-Host "Moved the old $link to $backup"
+}
+New-Item -ItemType Junction -Path $link -Target $target | Out-Null
+Write-Host "Linked $link to $target"
+{{ end -}}

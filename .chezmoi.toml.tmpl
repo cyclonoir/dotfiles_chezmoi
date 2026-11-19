@@ -1,0 +1,15 @@
+{{- /* Asked once by `chezmoi init`; dev-setup answers it with --promptBool "Work machine=true|false". */ -}}
+{{- $work := promptBoolOnce . "work" "Work machine" -}}
+[data]
+    work = {{ $work }}
+[edit]
+    command = "nvim"
+[diff]
+    command = "delta"
+    pager = "delta"
+[cd]
+{{- if eq .chezmoi.os "windows" }}
+    command = "nu"
+{{- else }}
+    command = "fish"
+{{- end }}
