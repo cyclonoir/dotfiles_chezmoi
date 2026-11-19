@@ -1,0 +1,32 @@
+# Work machines also get config.d/work-servers: the internal server hosts, kept encrypted in the
+# dotfiles repo. IdentitiesOnly stops ssh offering a key loaded in an agent before the one named here,
+# which GitHub would accept as the wrong account.
+Include config.d/*
+
+Host personal.github.com
+    HostName github.com
+    PreferredAuthentications publickey
+    IdentitiesOnly yes
+    IdentityFile ~/.ssh/id_github_personal
+{{- if .work }}
+
+Host work.github.com
+    HostName github.com
+    PreferredAuthentications publickey
+    IdentitiesOnly yes
+    IdentityFile ~/.ssh/id_github_work
+    ServerAliveInterval 60
+    ServerAliveCountMax 2147483
+
+Host ssh.dev.azure.com
+    HostName ssh.dev.azure.com
+    PreferredAuthentications publickey
+    IdentitiesOnly yes
+    IdentityFile ~/.ssh/id_azure_devops
+
+Host vs-ssh.visualstudio.com
+    HostName vs-ssh.visualstudio.com
+    PreferredAuthentications publickey
+    IdentitiesOnly yes
+    IdentityFile ~/.ssh/id_azure_devops
+{{- end }}

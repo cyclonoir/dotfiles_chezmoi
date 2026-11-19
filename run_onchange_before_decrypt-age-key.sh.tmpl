@@ -1,0 +1,13 @@
+{{ if ne .chezmoi.os "windows" -}}
+#!/bin/sh
+# On a machine's first apply, decrypt the age identity (key.txt.age, protected by a passphrase you
+# type once) to ~/.config/chezmoi/key.txt, which then decrypts the encrypted_ files. Runs before
+# chezmoi writes any file. (On Windows this renders empty; the .ps1 twin does the job there.)
+set -e
+key="$HOME/.config/chezmoi/key.txt"
+if [ ! -f "$key" ]; then
+    mkdir -p "$(dirname "$key")"
+    umask 077
+    {{ .chezmoi.executable | quote }} age decrypt --passphrase --output "$key" {{ joinPath .chezmoi.sourceDir "key.txt.age" | quote }}
+fi
+{{ end -}}

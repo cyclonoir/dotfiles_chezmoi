@@ -1,0 +1,12 @@
+{{ if eq .chezmoi.os "windows" -}}
+# On a machine's first apply, decrypt the age identity (key.txt.age, protected by a passphrase you
+# type once) to ~\.config\chezmoi\key.txt, which then decrypts the encrypted_ files. Runs before
+# chezmoi writes any file. (Elsewhere this renders empty; the .sh twin does the job there.)
+$ErrorActionPreference = 'Stop'
+$key = Join-Path $HOME '.config\chezmoi\key.txt'
+if (-not (Test-Path -LiteralPath $key)) {
+    New-Item -ItemType Directory -Force -Path (Split-Path $key) | Out-Null
+    & '{{ .chezmoi.executable }}' age decrypt --passphrase --output $key '{{ joinPath .chezmoi.sourceDir "key.txt.age" }}'
+    if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+}
+{{ end -}}

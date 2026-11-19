@@ -1,5 +1,8 @@
 # Target paths each kind of machine leaves out.
 
+# The passphrase-encrypted age identity: the decrypt-age-key script reads it from the source.
+key.txt.age
+
 {{ if ne .chezmoi.os "windows" }}
 AppData
 .config/wezterm
@@ -14,4 +17,11 @@ AppData
 {{ if not .work }}
 .config/fish/conf.d/work.fish
 .config/fish/work
+.ssh/config.d/work-servers
+.ssh/id_github_work
+.ssh/id_github_work.pub
+.ssh/id_azure_devops
+.ssh/id_azure_devops.pub
+.ssh/id_work_servers
+.ssh/id_work_servers.pub
 {{ end }}

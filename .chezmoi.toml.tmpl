@@ -1,5 +1,12 @@
 {{- /* Asked once by `chezmoi init`; dev-setup answers it with --promptBool "Work machine=true|false". */ -}}
 {{- $work := promptBoolOnce . "work" "Work machine" -}}
+# encrypted_ files (SSH keys, the work server list) are age-encrypted to this recipient. The identity
+# that decrypts them is key.txt.age in the source, itself encrypted with a passphrase; the
+# run_onchange_before_decrypt-age-key script writes it to key.txt on a machine's first apply.
+encryption = "age"
+[age]
+    identity = "~/.config/chezmoi/key.txt"
+    recipient = "age127mdu2pz8nvlsr9zdqngtr8m3nhzq8ykkzy0kjtymdacfrx9vq9shhrg2s"
 [data]
     work = {{ $work }}
 [edit]
