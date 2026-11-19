@@ -5,23 +5,32 @@ config.audible_bell = "Disabled"
 config.font = wezterm.font_with_fallback({ "0xProto Nerd Font Mono", "Symbols Nerd Font" })
 config.font_size = 20
 
-config.color_scheme = "GruvboxDark"
-
 config.hide_tab_bar_if_only_one_tab = true
 config.window_frame = {
-	active_titlebar_bg = "#3c3836",
-	inactive_titlebar_bg = "#3c3836",
+	active_titlebar_bg = "#232a2e",
+	inactive_titlebar_bg = "#232a2e",
 }
+-- Everforest, as the Linux machines show it: the terminal colors of Noctalia's "Everforest" palette
+-- (dark), which Noctalia gives foot there (api.noctalia.dev/palettes/Everforest). The tab bar uses
+-- the palette's surface colors.
 config.colors = {
-	-- soft contrast; the built-in "Gruvbox dark, soft (base16)" remaps the palette
-	background = "#32302f",
+	foreground = "#d3c6aa",
+	background = "#1e2326",
+	cursor_bg = "#e69875",
+	cursor_border = "#e69875",
+	cursor_fg = "#4c3743",
+	selection_fg = "#d3c6aa",
+	selection_bg = "#4c3743",
+	split = "#475258",
+	ansi = { "#7a8478", "#e67e80", "#a7c080", "#dbbc7f", "#7fbbb3", "#d699b6", "#83c092", "#f2efdf" },
+	brights = { "#a6b0a0", "#f85552", "#8da101", "#dfa000", "#3a94c5", "#df69ba", "#35a77c", "#fffbef" },
 	tab_bar = {
-		inactive_tab_edge = "#504945",
-		active_tab = { bg_color = "#32302f", fg_color = "#ebdbb2" },
-		inactive_tab = { bg_color = "#3c3836", fg_color = "#a89984" },
-		inactive_tab_hover = { bg_color = "#504945", fg_color = "#ebdbb2" },
-		new_tab = { bg_color = "#3c3836", fg_color = "#a89984" },
-		new_tab_hover = { bg_color = "#504945", fg_color = "#ebdbb2" },
+		inactive_tab_edge = "#2d353b",
+		active_tab = { bg_color = "#1e2326", fg_color = "#d3c6aa" },
+		inactive_tab = { bg_color = "#232a2e", fg_color = "#859289" },
+		inactive_tab_hover = { bg_color = "#2d353b", fg_color = "#d3c6aa" },
+		new_tab = { bg_color = "#232a2e", fg_color = "#859289" },
+		new_tab_hover = { bg_color = "#2d353b", fg_color = "#d3c6aa" },
 	},
 }
 

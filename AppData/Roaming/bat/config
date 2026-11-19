@@ -1,1 +1,2 @@
---theme="gruvbox-dark"
+# ansi paints with the terminal's own colors, so bat follows wezterm's Everforest, as on Linux.
+--theme="ansi"

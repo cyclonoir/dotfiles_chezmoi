@@ -28,10 +28,10 @@
 [delta]
 	navigate = true
 	line-numbers = true
-{{- /* Elsewhere delta follows BAT_THEME (ansi: the terminal's palette) and detects light or dark. */}}
+	syntax-theme = ansi
+{{- /* Elsewhere delta detects light or dark from the terminal. */}}
 {{- if eq .chezmoi.os "windows" }}
 	dark = true
-	syntax-theme = gruvbox-dark
 {{- end }}
 [alias]
 	last = log -1 --stat
