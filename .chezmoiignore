@@ -6,3 +6,12 @@ AppData
 # On Linux, dev-setup's noctalia-theme.lua picks the colorscheme to match the desktop palette.
 .config/nvim/lua/plugins/theme.lua
 {{ end }}
+
+{{ if ne .chezmoi.os "linux" }}
+.config/fish
+{{ end }}
+
+{{ if not .work }}
+.config/fish/conf.d/work.fish
+.config/fish/work
+{{ end }}
